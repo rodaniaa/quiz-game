@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موقع مدرسة المحبة - نظام التقييم والدرجات</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- الديكورات الخلفية -->
+  <div class="bg-decorations">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
+
+  <!-- الهيدر العام -->
+  <header>
+    <div class="school-logo">
+      <span>مدرسة المحبة</span>
+    </div>
+    <button class="settings-btn" id="open-settings-btn" onclick="openSettingsModal()">
+      ⚙️ إعدادات جوجل شيت
+    </button>
+  </header>
+
+  <!-- ==================== شاشة البوابات الرئيسية ==================== -->
+  <main class="page active" id="portal-page">
+    <div class="portal-container">
+      <div class="portal-title">
+        <h1>منصة تقييم مدرسة المحبة</h1>
+        <p>يرجى اختيار البوابة المخصصة لك للبدء في الرصد والتقييم مباشرة</p>
+      </div>
+
+      <div class="portal-cards">
+        <!-- كارت التقييم والغياب -->
+        <div class="portal-card fawzi" onclick="promptPassword('fawzi', 'بوابة التقييم والغياب والأسماء')">
+          <div class="portal-icon">📋</div>
+          <h2>التقييم والغياب</h2>
+          <button class="enter-btn">دخول البوابة</button>
+        </div>
+
+        <!-- كارت السلوكيات -->
+        <div class="portal-card eriny" onclick="promptPassword('eriny', 'بوابة السلوكيات')">
+          <div class="portal-icon">🌸</div>
+          <h2>السلوكيات</h2>
+          <button class="enter-btn">دخول البوابة</button>
+        </div>
+
+        <!-- كارت الألحان -->
+        <div class="portal-card mina" onclick="promptPassword('mina', 'بوابة الألحان')">
+          <div class="portal-icon">🎶</div>
+          <h2>الألحان</h2>
+          <button class="enter-btn">دخول البوابة</button>
+        </div>
+
+        <!-- كارت العقيدة -->
+        <div class="portal-card fadi" onclick="promptPassword('fadi', 'بوابة العقيدة')">
+          <div class="portal-icon">✝️</div>
+          <h2>العقيدة</h2>
+          <button class="enter-btn">دخول البوابة</button>
+        </div>
+
+        <!-- كارت تاريخ الكنيسة -->
+        <div class="portal-card mary" onclick="promptPassword('mary_history', 'بوابة تاريخ الكنيسة')">
+          <div class="portal-icon">📜</div>
+          <h2>تاريخ الكنيسة</h2>
+          <button class="enter-btn">دخول البوابة</button>
+        </div>
+
+        <!-- كارت أبطال إيمان -->
+        <div class="portal-card mary" onclick="promptPassword('mary_heroes', 'بوابة أبطال إيمان')">
+          <div class="portal-icon">🛡️</div>
+          <h2>أبطال إيمان</h2>
+          <button class="enter-btn">دخول البوابة</button>
+        </div>
+
+        <!-- كارت الكتاب المقدس -->
+        <div class="portal-card sally" onclick="promptPassword('sally', 'بوابة الكتاب المقدس')">
+          <div class="portal-icon">📖</div>
+          <h2>الكتاب المقدس</h2>
+          <button class="enter-btn">دخول البوابة</button>
+        </div>
+      </div>
+
+      <div class="status-indicator" id="sync-status">
+        ⚠️ وضع التشغيل الحالي: التخزين المحلي المؤقت (غير مرتبط بجوجل شيت)
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== واجهة فوزي (التقييم) ==================== -->
+  <main class="page" id="fawzi-page">
+    <div class="dashboard-wrapper">
+      <div class="dash-header">
+        <div class="dash-title">
+          <h2>التقييم والغياب</h2>
+          <span class="dash-badge fawzi-badge">التقييم العام والأسماء</span>
+        </div>
+        <button class="back-home-btn" onclick="logout()">خروج ↩</button>
+      </div>
+
+      <!-- تابات التنقل الداخلي -->
+      <nav class="tab-navigation">
+        <button class="tab-btn active" onclick="switchFawziTab('students-team1-tab', this)">إدارة الفريق الأول</button>
+        <button class="tab-btn" onclick="switchFawziTab('students-team2-tab', this)">إدارة الفريق الثاني</button>
+        <button class="tab-btn" onclick="switchFawziTab('attendance-team1-tab', this)">حضور الفريق الأول</button>
+        <button class="tab-btn" onclick="switchFawziTab('attendance-team2-tab', this)">حضور الفريق الثاني</button>
+        <button class="tab-btn" onclick="switchFawziTab('bonus-team1-tab', this)">بونص الفريق الأول</button>
+        <button class="tab-btn" onclick="switchFawziTab('bonus-team2-tab', this)">بونص الفريق الثاني</button>
+        <button class="tab-btn" onclick="switchFawziTab('unspecified-tab', this)">طلاب غير محددين</button>
+        <button class="tab-btn" onclick="switchFawziTab('grades-tab', this)">جدول درجات المواد</button>
+      </nav>
+
+      <!-- تاب إدارة الفريق الأول -->
+      <section class="tab-content active" id="students-team1-tab">
+        <div class="guide-box">
+          <h4>💡 إرشادات إدارة طلاب الفريق الأول:</h4>
+          <p>يمكنك إضافة الطلاب للفريق الأول بشكل مستقل، وتعديل أو حذف أي طالب من القائمة.</p>
+        </div>
+
+        <!-- طلاب الفريق الأول -->
+        <div class="action-row" style="margin-top: 1.5rem; margin-bottom: 1rem; justify-content: space-between; align-items: center; border-right: 4px solid var(--primary-mina); padding-right: 0.5rem;">
+          <h3 style="font-weight: 700; color: var(--primary-mina);">طلاب الفريق الأول</h3>
+          <button class="btn-submit-action" onclick="openAddStudentModal('الفريق الأول')" style="background-color: var(--primary-mina); color: var(--text-dark);">
+            ➕ إضافة طالب للفريق الأول
+          </button>
+        </div>
+        <div class="input-group" style="margin-bottom: 1rem;">
+          <label>بحث بالاسم في الفريق الأول</label>
+          <input type="text" class="input-field" id="search-student-team1" placeholder="اكتب اسم الطالب للبحث..." oninput="filterTeamStudents(1)">
+        </div>
+        <div class="table-container" style="margin-bottom: 2rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>اسم الطالب</th>
+                <th>الفريق</th>
+                <th>الدور في الفريق</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="students-team1-table-body">
+              <!-- طلاب الفريق الأول -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- تاب إدارة الفريق الثاني -->
+      <section class="tab-content" id="students-team2-tab">
+        <div class="guide-box">
+          <h4>💡 إرشادات إدارة طلاب الفريق الثاني:</h4>
+          <p>يمكنك إضافة الطلاب للفريق الثاني بشكل مستقل، وتعديل أو حذف أي طالب من القائمة.</p>
+        </div>
+
+        <!-- طلاب الفريق الثاني -->
+        <div class="action-row" style="margin-top: 2rem; margin-bottom: 1rem; justify-content: space-between; align-items: center; border-right: 4px solid var(--primary-eriny); padding-right: 0.5rem;">
+          <h3 style="font-weight: 700; color: var(--primary-eriny);">طلاب الفريق الثاني</h3>
+          <button class="btn-submit-action" onclick="openAddStudentModal('الفريق الثاني')" style="background-color: var(--primary-eriny); color: var(--text-dark);">
+            ➕ إضافة طالب للفريق الثاني
+          </button>
+        </div>
+        <div class="input-group" style="margin-bottom: 1rem;">
+          <label>بحث بالاسم في الفريق الثاني</label>
+          <input type="text" class="input-field" id="search-student-team2" placeholder="اكتب اسم الطالب للبحث..." oninput="filterTeamStudents(2)">
+        </div>
+        <div class="table-container" style="margin-bottom: 2rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>اسم الطالب</th>
+                <th>الفريق</th>
+                <th>الدور في الفريق</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="students-team2-table-body">
+              <!-- طلاب الفريق الثاني -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- حضور وغياب الفريق الأول -->
+      <section class="tab-content" id="attendance-team1-tab">
+        <div class="guide-box">
+          <h4>💡 إرشادات تسجيل حضور الفريق الأول:</h4>
+          <p>اختر تاريخ اليوم، والمادة المراد رصد غيابها. بعد ذلك قم برصد حضور طلاب الفريق الأول ثم احفظ السجل.</p>
+        </div>
+
+        <div class="form-row" style="max-width: 600px; margin-bottom: 1.5rem;">
+          <div class="input-group">
+            <label>تاريخ اليوم</label>
+            <input type="date" class="input-field" id="attendance-date-team1">
+          </div>
+          <div class="input-group">
+            <label>المادة المراد رصد غيابها</label>
+            <select class="input-field" id="attendance-subject-team1">
+              <option value="كتاب مقدس">كتاب مقدس</option>
+              <option value="تاريخ كنيسة">تاريخ كنيسة</option>
+              <option value="ألحان">ألحان</option>
+              <option value="أبطال إيمان">أبطال إيمان</option>
+              <option value="سلوكيات">سلوكيات</option>
+              <option value="عقيدة">عقيدة</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="team-attendance-section" style="background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border);">
+          <h3 class="team-title" style="color: var(--primary-mina); font-weight: 700; border-right: 4px solid var(--primary-mina); padding-right: 0.5rem;">حضور وغياب الفريق الأول</h3>
+          <div class="table-container" style="margin-top: 1rem; margin-bottom: 1rem;">
+            <table>
+              <thead>
+                <tr>
+                  <th>اسم الطالب</th>
+                  <th style="text-align: center; width: 120px;">الحضور الحالي</th>
+                  <th style="text-align: center; width: 120px;">البونص الحالي</th>
+                  <th>رصد حالة الحضور</th>
+                </tr>
+              </thead>
+              <tbody id="attendance-team1-table-body">
+                <!-- طلاب الفريق الأول -->
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- ملخص إحصائيات الفريق الأول -->
+          <div class="team-summary-bar" id="team1-attendance-summary">
+            <div>👥 طلاب الفريق الأول: <span id="team1-student-count">0</span></div>
+            <div>✅ الحاضرين الآن: <span id="team1-present-count">0</span></div>
+            <div>🎁 بونص ممنوح الآن: <span id="team1-bonus-count">0</span></div>
+          </div>
+          <div class="team-cumulative-summary" id="team1-cumulative-summary">
+            <div>📊 إجمالي الحضور التراكمي: <span id="team1-cum-attendance">0</span></div>
+            <div>🏆 إجمالي البونص التراكمي: <span id="team1-cum-bonus">0</span></div>
+          </div>
+
+          <button class="btn-submit-action" onclick="saveTeamAttendance('الفريق الأول')" style="background-color: var(--primary-mina); color: var(--text-dark); width: 100%; justify-content: center;">
+            💾 حفظ حضور وغياب الفريق الأول
+          </button>
+        </div>
+      </section>
+
+      <!-- حضور وغياب الفريق الثاني -->
+      <section class="tab-content" id="attendance-team2-tab">
+        <div class="guide-box">
+          <h4>💡 إرشادات تسجيل حضور الفريق الثاني:</h4>
+          <p>اختر تاريخ اليوم، والمادة المراد رصد غيابها. بعد ذلك قم برصد حضور طلاب الفريق الثاني ثم احفظ السجل.</p>
+        </div>
+
+        <div class="form-row" style="max-width: 600px; margin-bottom: 1.5rem;">
+          <div class="input-group">
+            <label>تاريخ اليوم</label>
+            <input type="date" class="input-field" id="attendance-date-team2">
+          </div>
+          <div class="input-group">
+            <label>المادة المراد رصد غيابها</label>
+            <select class="input-field" id="attendance-subject-team2">
+              <option value="كتاب مقدس">كتاب مقدس</option>
+              <option value="تاريخ كنيسة">تاريخ كنيسة</option>
+              <option value="ألحان">ألحان</option>
+              <option value="أبطال إيمان">أبطال إيمان</option>
+              <option value="سلوكيات">سلوكيات</option>
+              <option value="عقيدة">عقيدة</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="team-attendance-section" style="background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border);">
+          <h3 class="team-title" style="color: var(--primary-eriny); font-weight: 700; border-right: 4px solid var(--primary-eriny); padding-right: 0.5rem;">حضور وغياب الفريق الثاني</h3>
+          <div class="table-container" style="margin-top: 1rem; margin-bottom: 1rem;">
+            <table>
+              <thead>
+                <tr>
+                  <th>اسم الطالب</th>
+                  <th style="text-align: center; width: 120px;">الحضور الحالي</th>
+                  <th style="text-align: center; width: 120px;">البونص الحالي</th>
+                  <th>رصد حالة الحضور</th>
+                </tr>
+              </thead>
+              <tbody id="attendance-team2-table-body">
+                <!-- طلاب الفريق الثاني -->
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- ملخص إحصائيات الفريق الثاني -->
+          <div class="team-summary-bar" id="team2-attendance-summary">
+            <div>👥 طلاب الفريق الثاني: <span id="team2-student-count">0</span></div>
+            <div>✅ الحاضرين الآن: <span id="team2-present-count">0</span></div>
+            <div>🎁 بونص ممنوح الآن: <span id="team2-bonus-count">0</span></div>
+          </div>
+          <div class="team-cumulative-summary" id="team2-cumulative-summary">
+            <div>📊 إجمالي الحضور التراكمي: <span id="team2-cum-attendance">0</span></div>
+            <div>🏆 إجمالي البونص التراكمي: <span id="team2-cum-bonus">0</span></div>
+          </div>
+
+          <button class="btn-submit-action" onclick="saveTeamAttendance('الفريق الثاني')" style="background-color: var(--primary-eriny); color: var(--text-dark); width: 100%; justify-content: center;">
+            💾 حفظ حضور وغياب الفريق الثاني
+          </button>
+        </div>
+      </section>
+
+      <!-- بونص الفريق الأول -->
+      <section class="tab-content" id="bonus-team1-tab">
+        <div class="guide-box">
+          <h4>💡 إرشادات رصد بونص الفريق الأول:</h4>
+          <p>اختر تاريخ الرصد، الطالب من الفريق الأول، المادة، ثم حدد نقاط البونص واضغط حفظ.</p>
+        </div>
+
+        <div class="bonus-form-panel" style="max-width: 600px; margin: 0 auto; background: rgba(15, 23, 42, 0.2); padding: 2rem; border-radius: var(--radius-md); border: 1px solid var(--card-border);">
+          <div class="form-row">
+            <div class="input-group">
+              <label>تاريخ رصد البونص</label>
+              <input type="date" class="input-field" id="bonus-date-team1">
+            </div>
+            <div class="input-group">
+              <label>المادة</label>
+              <select class="input-field" id="bonus-subject-team1">
+                <option value="كتاب مقدس">كتاب مقدس</option>
+                <option value="تاريخ كنيسة">تاريخ كنيسة</option>
+                <option value="ألحان">ألحان</option>
+                <option value="أبطال إيمان">أبطال إيمان</option>
+                <option value="سلوكيات">سلوكيات</option>
+                <option value="عقيدة">عقيدة</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>اختر اسم الطالب</label>
+            <div class="search-container">
+              <input type="text" class="input-field" id="bonus-student-search-team1" placeholder="اضغط لاختيار الاسم أو اكتب للبحث..." oninput="searchStudentForBonusTeam1(this.value)" onfocus="searchStudentForBonusTeam1(this.value)" onclick="searchStudentForBonusTeam1(this.value)">
+              <input type="hidden" id="bonus-student-id-team1">
+              <div class="search-results" id="bonus-search-results-team1"></div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>نقاط البونص (+/-)</label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <input type="number" class="input-field" id="bonus-points-team1" style="flex: 1;" placeholder="مثال: 5">
+              <button class="btn-small btn-edit" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('team1', 1)">+1</button>
+              <button class="btn-small btn-edit" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('team1', 2)">+2</button>
+              <button class="btn-small btn-edit" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('team1', 5)">+5</button>
+              <button class="btn-small btn-delete" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('team1', -1)">-1</button>
+            </div>
+          </div>
+
+          <!-- المجموع التراكمي للفريق الأول -->
+          <div class="team-cumulative-summary" style="margin-top: 1.5rem; margin-bottom: 0.5rem; justify-content: center; gap: 2rem;">
+            <div>📊 حضور الفريق التراكمي: <span id="team1-bonus-tab-cum-attendance">0</span></div>
+            <div>🏆 بونص الفريق التراكمي: <span id="team1-bonus-tab-cum-bonus">0</span></div>
+          </div>
+
+          <button class="btn-submit-action" onclick="saveTeamBonus('الفريق الأول')" style="background-color: var(--primary-mina); color: var(--text-dark); margin-top: 1.5rem; width: 100%; justify-content: center;">
+            🎯 حفظ بونص الفريق الأول
+          </button>
+        </div>
+      </section>
+
+      <!-- بونص الفريق الثاني -->
+      <section class="tab-content" id="bonus-team2-tab">
+        <div class="guide-box">
+          <h4>💡 إرشادات رصد بونص الفريق الثاني:</h4>
+          <p>اختر تاريخ الرصد، الطالب من الفريق الثاني، المادة، ثم حدد نقاط البونص واضغط حفظ.</p>
+        </div>
+
+        <div class="bonus-form-panel" style="max-width: 600px; margin: 0 auto; background: rgba(15, 23, 42, 0.2); padding: 2rem; border-radius: var(--radius-md); border: 1px solid var(--card-border);">
+          <div class="form-row">
+            <div class="input-group">
+              <label>تاريخ رصد البونص</label>
+              <input type="date" class="input-field" id="bonus-date-team2">
+            </div>
+            <div class="input-group">
+              <label>المادة</label>
+              <select class="input-field" id="bonus-subject-team2">
+                <option value="كتاب مقدس">كتاب مقدس</option>
+                <option value="تاريخ كنيسة">تاريخ كنيسة</option>
+                <option value="ألحان">ألحان</option>
+                <option value="أبطال إيمان">أبطال إيمان</option>
+                <option value="سلوكيات">سلوكيات</option>
+                <option value="عقيدة">عقيدة</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>اختر اسم الطالب</label>
+            <div class="search-container">
+              <input type="text" class="input-field" id="bonus-student-search-team2" placeholder="اضغط لاختيار الاسم أو اكتب للبحث..." oninput="searchStudentForBonusTeam2(this.value)" onfocus="searchStudentForBonusTeam2(this.value)" onclick="searchStudentForBonusTeam2(this.value)">
+              <input type="hidden" id="bonus-student-id-team2">
+              <div class="search-results" id="bonus-search-results-team2"></div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>نقاط البونص (+/-)</label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <input type="number" class="input-field" id="bonus-points-team2" style="flex: 1;" placeholder="مثال: 5">
+              <button class="btn-small btn-edit" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('team2', 1)">+1</button>
+              <button class="btn-small btn-edit" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('team2', 2)">+2</button>
+              <button class="btn-small btn-edit" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('team2', 5)">+5</button>
+              <button class="btn-small btn-delete" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('team2', -1)">-1</button>
+            </div>
+          </div>
+
+          <!-- المجموع التراكمي للفريق الثاني -->
+          <div class="team-cumulative-summary" style="margin-top: 1.5rem; margin-bottom: 0.5rem; justify-content: center; gap: 2rem;">
+            <div>📊 حضور الفريق التراكمي: <span id="team2-bonus-tab-cum-attendance">0</span></div>
+            <div>🏆 بونص الفريق التراكمي: <span id="team2-bonus-tab-cum-bonus">0</span></div>
+          </div>
+
+          <button class="btn-submit-action" onclick="saveTeamBonus('الفريق الثاني')" style="background-color: var(--primary-eriny); color: var(--text-main); margin-top: 1.5rem; width: 100%; justify-content: center;">
+            🎯 حفظ بونص الفريق الثاني
+          </button>
+        </div>
+      </section>
+
+      <!-- تاب الطلاب غير المحددين -->
+      <section class="tab-content" id="unspecified-tab">
+        <div class="guide-box">
+          <h4>💡 إرشادات الطلاب غير المحددين:</h4>
+          <p>يمكنك هنا إدارة وتعديل حضور وبونص الطلاب الذين لم يتم تعيينهم في الفريق الأول أو الثاني بعد.</p>
+        </div>
+
+        <!-- إدارة طلاب غير محددين -->
+        <h3 style="font-weight: 700; color: var(--text-muted); margin-bottom: 1rem; border-right: 4px solid var(--text-muted); padding-right: 0.5rem;">إدارة الطلاب غير المحددين</h3>
+        <div class="table-container" style="margin-bottom: 2rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>اسم الطالب</th>
+                <th>الفريق</th>
+                <th>الدور في الفريق</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="students-unspecified-table-body">
+              <!-- طلاب غير محدد فريقهم -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- حضور طلاب غير محددين -->
+        <div class="team-attendance-section" style="margin-bottom: 2rem; background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border);">
+          <h3 class="team-title" style="color: var(--text-muted); font-weight: 700; border-right: 4px solid var(--text-muted); padding-right: 0.5rem; margin-bottom: 1rem;">حضور وغياب غير محدد</h3>
+          <div class="form-row" style="max-width: 600px; margin-bottom: 1.5rem;">
+            <div class="input-group">
+              <label>تاريخ اليوم</label>
+              <input type="date" class="input-field" id="attendance-date-unspecified">
+            </div>
+            <div class="input-group">
+              <label>المادة</label>
+              <select class="input-field" id="attendance-subject-unspecified">
+                <option value="كتاب مقدس">كتاب مقدس</option>
+                <option value="تاريخ كنيسة">تاريخ كنيسة</option>
+                <option value="ألحان">ألحان</option>
+                <option value="أبطال إيمان">أبطال إيمان</option>
+                <option value="سلوكيات">سلوكيات</option>
+                <option value="عقيدة">عقيدة</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-container" style="margin-bottom: 1rem;">
+            <table>
+              <thead>
+                <tr>
+                  <th>اسم الطالب</th>
+                  <th style="text-align: center; width: 120px;">الحضور الحالي</th>
+                  <th style="text-align: center; width: 120px;">البونص الحالي</th>
+                  <th>رصد حالة الحضور</th>
+                </tr>
+              </thead>
+              <tbody id="attendance-unspecified-table-body">
+                <!-- طلاب غير محدد فريقهم -->
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- ملخص إحصائيات غير محدد -->
+          <div class="team-summary-bar" id="unspecified-attendance-summary">
+            <div>👥 طلاب غير محددين: <span id="unspecified-student-count">0</span></div>
+            <div>✅ الحاضرين الآن: <span id="unspecified-present-count">0</span></div>
+            <div>🎁 بونص ممنوح الآن: <span id="unspecified-bonus-count">0</span></div>
+          </div>
+          <div class="team-cumulative-summary" id="unspecified-cumulative-summary">
+            <div>📊 إجمالي الحضور التراكمي: <span id="unspecified-cum-attendance">0</span></div>
+            <div>🏆 إجمالي البونص التراكمي: <span id="unspecified-cum-bonus">0</span></div>
+          </div>
+
+          <button class="btn-submit-action" onclick="saveTeamAttendance('غير محدد')" style="background-color: var(--text-muted); color: var(--text-dark); width: 100%; justify-content: center;">
+            💾 حفظ حضور الطلاب غير المحددين
+          </button>
+        </div>
+
+        <!-- بونص طلاب غير محددين -->
+        <div class="team-bonus-section" style="background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border);">
+          <h3 class="team-title" style="color: var(--text-muted); font-weight: 700; border-right: 4px solid var(--text-muted); padding-right: 0.5rem; margin-bottom: 1rem;">بونص الطلاب غير المحددين</h3>
+          <div class="bonus-form-panel" style="max-width: 600px; margin: 0 auto;">
+            <div class="form-row">
+              <div class="input-group">
+                <label>تاريخ رصد البونص</label>
+                <input type="date" class="input-field" id="bonus-date-unspecified">
+              </div>
+              <div class="input-group">
+                <label>المادة</label>
+                <select class="input-field" id="bonus-subject-unspecified">
+                  <option value="كتاب مقدس">كتاب مقدس</option>
+                  <option value="تاريخ كنيسة">تاريخ كنيسة</option>
+                  <option value="ألحان">ألحان</option>
+                  <option value="أبطال إيمان">أبطال إيمان</option>
+                  <option value="سلوكيات">سلوكيات</option>
+                  <option value="عقيدة">عقيدة</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>اختر اسم الطالب</label>
+              <div class="search-container">
+                <input type="text" class="input-field" id="bonus-student-search-unspecified" placeholder="اضغط لاختيار الاسم أو اكتب للبحث..." oninput="searchStudentForBonusUnspecified(this.value)" onfocus="searchStudentForBonusUnspecified(this.value)" onclick="searchStudentForBonusUnspecified(this.value)">
+                <input type="hidden" id="bonus-student-id-unspecified">
+                <div class="search-results" id="bonus-search-results-unspecified"></div>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>نقاط البونص (+/-)</label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="number" class="input-field" id="bonus-points-unspecified" style="flex: 1;" placeholder="مثال: 5">
+                <button class="btn-small btn-edit" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('unspecified', 1)">+1</button>
+                <button class="btn-small btn-edit" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('unspecified', 2)">+2</button>
+                <button class="btn-small btn-edit" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('unspecified', 5)">+5</button>
+                <button class="btn-small btn-delete" style="height: 45px; padding: 0 1rem; font-size: 1rem;" onclick="adjustBonusPoints('unspecified', -1)">-1</button>
+              </div>
+            </div>
+            <!-- المجموع التراكمي للطلاب غير المحددين -->
+            <div class="team-cumulative-summary" style="margin-top: 1.5rem; margin-bottom: 0.5rem; justify-content: center; gap: 2rem;">
+              <div>📊 حضور الفريق التراكمي: <span id="unspecified-bonus-tab-cum-attendance">0</span></div>
+              <div>🏆 بونص الفريق التراكمي: <span id="unspecified-bonus-tab-cum-bonus">0</span></div>
+            </div>
+
+            <button class="btn-submit-action" onclick="saveTeamBonus('غير محدد')" style="background-color: var(--text-muted); color: var(--text-dark); margin-top: 1.5rem; width: 100%; justify-content: center;">
+              🎯 حفظ بونص غير محدد
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- تاب جدول درجات المواد -->
+      <section class="tab-content" id="grades-tab">
+        <div class="guide-box">
+          <h4>💡 إرشادات جدول الدرجات:</h4>
+          <p>يعرض هذا الجدول الدرجات الحالية لجميع الطلاب في المواد الستة والمجموع الكلي المسترجع من شيت جوجل. يمكنك البحث وتصفية الجدول بالاسم أو الفريق.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <label>بحث بالاسم في جدول الدرجات</label>
+            <input type="text" class="input-field" id="search-grade-input" placeholder="اكتب اسم الطالب للبحث..." oninput="filterGradesTable()">
+          </div>
+          <div class="input-group">
+            <label>تصفية بالفريق في جدول الدرجات</label>
+            <select class="input-field" id="filter-grade-team-select" onchange="filterGradesTable()">
+              <option value="all">جميع الفرق</option>
+              <option value="الفريق الأول">الفريق الأول</option>
+              <option value="الفريق الثاني">الفريق الثاني</option>
+              <option value="غير محدد">غير محدد</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>اسم الطالب</th>
+                <th>الفريق</th>
+                <th>السلوكيات</th>
+                <th>الألحان</th>
+                <th>العقيدة</th>
+                <th>تاريخ كنيسة</th>
+                <th>كتاب مقدس</th>
+                <th>أبطال إيمان</th>
+                <th style="font-weight: 800; color: var(--accent-gold);">المجموع</th>
+              </tr>
+            </thead>
+            <tbody id="grades-table-body">
+              <!-- يتم جلب الدرجات ديناميكياً -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ==================== واجهة إيريني (السلوكيات) ==================== -->
+  <main class="page eriny-theme" id="eriny-page">
+    <div class="dashboard-wrapper">
+      <div class="dash-header">
+        <div class="dash-title">
+          <h2>السلوكيات</h2>
+          <span class="dash-badge eriny-badge">رصد درجات السلوك</span>
+        </div>
+        <button class="back-home-btn" onclick="logout()">خروج ↩</button>
+      </div>
+
+      <div class="guide-box">
+        <h4>💡 إرشادات تقييم السلوك:</h4>
+        <p>ابحث عن اسم الطالب، ثم اختر إحدى الدرجات المحددة (4، 6، 8، 10) لحفظ تقييم سلوكه اليومي.</p>
+      </div>
+
+      <div class="student-selection-panel">
+        <div style="background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 1rem;">
+          <div class="input-group">
+            <label>تاريخ التقييم</label>
+            <input type="date" class="input-field" id="eriny-date">
+          </div>
+          <div class="input-group">
+            <label>اختر الفريق</label>
+            <select class="input-field" id="eriny-team-select" onchange="resetMaterialInterface('eriny')">
+              <option value="all">كل الفرق</option>
+              <option value="الفريق الأول">الفريق الأول</option>
+              <option value="الفريق الثاني">الفريق الثاني</option>
+              <option value="غير محدد">غير محدد</option>
+            </select>
+          </div>
+          <div class="input-group" id="eriny-search-group">
+            <label>اختر اسم الطالب</label>
+            <div class="search-container">
+              <input type="text" class="input-field" id="eriny-student-search" placeholder="اضغط لاختيار الاسم أو اكتب للبحث..." oninput="searchStudentForEriny(this.value)" onfocus="searchStudentForEriny(this.value)" onclick="searchStudentForEriny(this.value)">
+              <input type="hidden" id="eriny-student-id">
+              <div class="search-results" id="eriny-search-results"></div>
+            </div>
+          </div>
+          <div class="input-group-checkbox" style="display: flex; align-items: center; gap: 0.5rem; margin-top: -0.5rem;">
+            <input type="checkbox" id="eriny-name-not-found" onchange="toggleManualName('eriny')" style="width: 16px; height: 16px; cursor: pointer;">
+            <label for="eriny-name-not-found" style="cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">الاسم غير موجود بالقائمة؟</label>
+          </div>
+          <div class="input-group" id="eriny-manual-name-group" style="display: none;">
+            <label>اكتب اسم الطالب الجديد</label>
+            <input type="text" class="input-field" id="eriny-manual-name" placeholder="اكتب الاسم رباعي...">
+          </div>
+        </div>
+
+        <div class="score-selector">
+          <label style="font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem;">حدد درجة السلوك للطالب</label>
+          <div class="score-buttons" style="grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 0.5rem; width: 100%; max-width: 100%;">
+            <button class="score-btn" onclick="selectScore('eriny', 0)">0</button>
+            <button class="score-btn" onclick="selectScore('eriny', 1)">1</button>
+            <button class="score-btn" onclick="selectScore('eriny', 2)">2</button>
+            <button class="score-btn" onclick="selectScore('eriny', 3)">3</button>
+            <button class="score-btn" onclick="selectScore('eriny', 4)">4</button>
+            <button class="score-btn" onclick="selectScore('eriny', 5)">5</button>
+            <button class="score-btn" onclick="selectScore('eriny', 6)">6</button>
+            <button class="score-btn" onclick="selectScore('eriny', 7)">7</button>
+            <button class="score-btn" onclick="selectScore('eriny', 8)">8</button>
+            <button class="score-btn" onclick="selectScore('eriny', 9)">9</button>
+            <button class="score-btn" onclick="selectScore('eriny', 10)">10</button>
+          </div>
+          <input type="hidden" id="eriny-score-value">
+          <div class="score-preview" id="eriny-score-preview">
+            الدرجة المحددة: <span>-</span>
+          </div>
+          <button class="btn-submit-action" onclick="saveBehaviorScore()" style="margin-top: 1.5rem; width: 100%; justify-content: center;">
+            🌸 رصد السلوك وحفظ في الشيت
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== واجهة مينا (الألحان) ==================== -->
+  <main class="page mina-theme" id="mina-page">
+    <div class="dashboard-wrapper">
+      <div class="dash-header">
+        <div class="dash-title">
+          <h2>الألحان</h2>
+          <span class="dash-badge mina-badge">رصد درجات الألحان</span>
+        </div>
+        <button class="back-home-btn" onclick="logout()">خروج ↩</button>
+      </div>
+
+      <div class="guide-box">
+        <h4>💡 إرشادات تقييم الألحان:</h4>
+        <p>ابحث عن اسم الطالب ورصد درجة حفظه للألحان والتراتيل (4، 6، 8، 10) لتسجيلها سحابياً.</p>
+      </div>
+
+      <div class="student-selection-panel">
+        <div style="background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 1rem;">
+          <div class="input-group">
+            <label>تاريخ التقييم</label>
+            <input type="date" class="input-field" id="mina-date">
+          </div>
+          <div class="input-group">
+            <label>اختر الفريق</label>
+            <select class="input-field" id="mina-team-select" onchange="resetMaterialInterface('mina')">
+              <option value="all">كل الفرق</option>
+              <option value="الفريق الأول">الفريق الأول</option>
+              <option value="الفريق الثاني">الفريق الثاني</option>
+              <option value="غير محدد">غير محدد</option>
+            </select>
+          </div>
+          <div class="input-group" id="mina-search-group">
+            <label>اختر اسم الطالب</label>
+            <div class="search-container">
+              <input type="text" class="input-field" id="mina-student-search" placeholder="اضغط لاختيار الاسم أو اكتب للبحث..." oninput="searchStudentForMina(this.value)" onfocus="searchStudentForMina(this.value)" onclick="searchStudentForMina(this.value)">
+              <input type="hidden" id="mina-student-id">
+              <div class="search-results" id="mina-search-results"></div>
+            </div>
+          </div>
+          <div class="input-group-checkbox" style="display: flex; align-items: center; gap: 0.5rem; margin-top: -0.5rem;">
+            <input type="checkbox" id="mina-name-not-found" onchange="toggleManualName('mina')" style="width: 16px; height: 16px; cursor: pointer;">
+            <label for="mina-name-not-found" style="cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">الاسم غير موجود بالقائمة؟</label>
+          </div>
+          <div class="input-group" id="mina-manual-name-group" style="display: none;">
+            <label>اكتب اسم الطالب الجديد</label>
+            <input type="text" class="input-field" id="mina-manual-name" placeholder="اكتب الاسم رباعي...">
+          </div>
+        </div>
+
+        <div class="score-selector">
+          <label style="font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem;">حدد درجة التقييم في الألحان</label>
+          <div class="score-buttons" style="grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 0.5rem; width: 100%; max-width: 100%;">
+            <button class="score-btn" onclick="selectScore('mina', 0)">0</button>
+            <button class="score-btn" onclick="selectScore('mina', 1)">1</button>
+            <button class="score-btn" onclick="selectScore('mina', 2)">2</button>
+            <button class="score-btn" onclick="selectScore('mina', 3)">3</button>
+            <button class="score-btn" onclick="selectScore('mina', 4)">4</button>
+            <button class="score-btn" onclick="selectScore('mina', 5)">5</button>
+            <button class="score-btn" onclick="selectScore('mina', 6)">6</button>
+            <button class="score-btn" onclick="selectScore('mina', 7)">7</button>
+            <button class="score-btn" onclick="selectScore('mina', 8)">8</button>
+            <button class="score-btn" onclick="selectScore('mina', 9)">9</button>
+            <button class="score-btn" onclick="selectScore('mina', 10)">10</button>
+          </div>
+          <input type="hidden" id="mina-score-value">
+          <div class="score-preview" id="mina-score-preview">
+            الدرجة المحددة: <span>-</span>
+          </div>
+          <button class="btn-submit-action" onclick="saveHymnsScore()" style="margin-top: 1.5rem; width: 100%; justify-content: center;">
+            🎶 رصد الألحان وحفظ في الشيت
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== واجهة فادي (العقيدة) ==================== -->
+  <main class="page fadi-theme" id="fadi-page">
+    <div class="dashboard-wrapper">
+      <div class="dash-header">
+        <div class="dash-title">
+          <h2>العقيدة</h2>
+          <span class="dash-badge fadi-badge">رصد درجات العقيدة</span>
+        </div>
+        <button class="back-home-btn" onclick="logout()">خروج ↩</button>
+      </div>
+
+      <div class="guide-box">
+        <h4>💡 إرشادات تقييم العقيدة:</h4>
+        <p>ابحث عن اسم الطالب، ثم حدد درجة العقيدة المناسبة له اليوم (4، 6، 8، 10) لتسجيلها في شيت جوجل.</p>
+      </div>
+
+      <div class="student-selection-panel">
+        <div style="background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 1rem;">
+          <div class="input-group">
+            <label>تاريخ التقييم</label>
+            <input type="date" class="input-field" id="fadi-date">
+          </div>
+          <div class="input-group">
+            <label>اختر الفريق</label>
+            <select class="input-field" id="fadi-team-select" onchange="resetMaterialInterface('fadi')">
+              <option value="all">كل الفرق</option>
+              <option value="الفريق الأول">الفريق الأول</option>
+              <option value="الفريق الثاني">الفريق الثاني</option>
+              <option value="غير محدد">غير محدد</option>
+            </select>
+          </div>
+          <div class="input-group" id="fadi-search-group">
+            <label>اختر اسم الطالب</label>
+            <div class="search-container">
+              <input type="text" class="input-field" id="fadi-student-search" placeholder="اضغط لاختيار الاسم أو اكتب للبحث..." oninput="searchStudentForFadi(this.value)" onfocus="searchStudentForFadi(this.value)" onclick="searchStudentForFadi(this.value)">
+              <input type="hidden" id="fadi-student-id">
+              <div class="search-results" id="fadi-search-results"></div>
+            </div>
+          </div>
+          <div class="input-group-checkbox" style="display: flex; align-items: center; gap: 0.5rem; margin-top: -0.5rem;">
+            <input type="checkbox" id="fadi-name-not-found" onchange="toggleManualName('fadi')" style="width: 16px; height: 16px; cursor: pointer;">
+            <label for="fadi-name-not-found" style="cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">الاسم غير موجود بالقائمة؟</label>
+          </div>
+          <div class="input-group" id="fadi-manual-name-group" style="display: none;">
+            <label>اكتب اسم الطالب الجديد</label>
+            <input type="text" class="input-field" id="fadi-manual-name" placeholder="اكتب الاسم رباعي...">
+          </div>
+        </div>
+
+        <div class="score-selector">
+          <label style="font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem;">حدد درجة العقيدة للطالب</label>
+          <div class="score-buttons" style="grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 0.5rem; width: 100%; max-width: 100%;">
+            <button class="score-btn" onclick="selectScore('fadi', 0)">0</button>
+            <button class="score-btn" onclick="selectScore('fadi', 1)">1</button>
+            <button class="score-btn" onclick="selectScore('fadi', 2)">2</button>
+            <button class="score-btn" onclick="selectScore('fadi', 3)">3</button>
+            <button class="score-btn" onclick="selectScore('fadi', 4)">4</button>
+            <button class="score-btn" onclick="selectScore('fadi', 5)">5</button>
+            <button class="score-btn" onclick="selectScore('fadi', 6)">6</button>
+            <button class="score-btn" onclick="selectScore('fadi', 7)">7</button>
+            <button class="score-btn" onclick="selectScore('fadi', 8)">8</button>
+            <button class="score-btn" onclick="selectScore('fadi', 9)">9</button>
+            <button class="score-btn" onclick="selectScore('fadi', 10)">10</button>
+          </div>
+          <input type="hidden" id="fadi-score-value">
+          <div class="score-preview" id="fadi-score-preview">
+            الدرجة المحددة: <span>-</span>
+          </div>
+          <button class="btn-submit-action" onclick="saveCreedScore()" style="margin-top: 1.5rem; width: 100%; justify-content: center;">
+            ✝️ رصد العقيدة وحفظ في الشيت
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== واجهة تاريخ الكنيسة ==================== -->
+  <main class="page mary-theme mary-history-theme" id="mary-history-page">
+    <div class="dashboard-wrapper">
+      <div class="dash-header">
+        <div class="dash-title">
+          <h2>تاريخ الكنيسة</h2>
+          <span class="dash-badge mary-badge">رصد درجات تاريخ الكنيسة</span>
+        </div>
+        <button class="back-home-btn" onclick="logout()">خروج ↩</button>
+      </div>
+
+      <div class="guide-box">
+        <h4>💡 إرشادات تقييم تاريخ الكنيسة:</h4>
+        <p>ابحث عن الطالب وحدد درجة تاريخ الكنيسة المناسبة له اليوم (4، 6، 8، 10) لتسجيلها في شيت جوجل.</p>
+      </div>
+
+      <div class="student-selection-panel">
+        <div style="background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 1rem;">
+          <div class="input-group">
+            <label>تاريخ التقييم</label>
+            <input type="date" class="input-field" id="mary-history-date">
+          </div>
+          <div class="input-group">
+            <label>اختر الفريق</label>
+            <select class="input-field" id="mary-history-team-select" onchange="resetMaterialInterface('mary-history')">
+              <option value="all">كل الفرق</option>
+              <option value="الفريق الأول">الفريق الأول</option>
+              <option value="الفريق الثاني">الفريق الثاني</option>
+              <option value="غير محدد">غير محدد</option>
+            </select>
+          </div>
+          <div class="input-group" id="mary-history-search-group">
+            <label>اختر اسم الطالب</label>
+            <div class="search-container">
+              <input type="text" class="input-field" id="mary-history-student-search" placeholder="اضغط لاختيار الاسم أو اكتب للبحث..." oninput="searchStudentForMaryHistory(this.value)" onfocus="searchStudentForMaryHistory(this.value)" onclick="searchStudentForMaryHistory(this.value)">
+              <input type="hidden" id="mary-history-student-id">
+              <div class="search-results" id="mary-history-search-results"></div>
+            </div>
+          </div>
+          <div class="input-group-checkbox" style="display: flex; align-items: center; gap: 0.5rem; margin-top: -0.5rem;">
+            <input type="checkbox" id="mary-history-name-not-found" onchange="toggleManualName('mary-history')" style="width: 16px; height: 16px; cursor: pointer;">
+            <label for="mary-history-name-not-found" style="cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">الاسم غير موجود بالقائمة؟</label>
+          </div>
+          <div class="input-group" id="mary-history-manual-name-group" style="display: none;">
+            <label>اكتب اسم الطالب الجديد</label>
+            <input type="text" class="input-field" id="mary-history-manual-name" placeholder="اكتب الاسم رباعي...">
+          </div>
+        </div>
+
+        <div class="score-selector">
+          <label style="font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem;">حدد درجة تاريخ الكنيسة</label>
+          <div class="score-buttons" style="grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 0.5rem; width: 100%; max-width: 100%;">
+            <button class="score-btn" onclick="selectScore('mary-history', 0)">0</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 1)">1</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 2)">2</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 3)">3</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 4)">4</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 5)">5</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 6)">6</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 7)">7</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 8)">8</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 9)">9</button>
+            <button class="score-btn" onclick="selectScore('mary-history', 10)">10</button>
+          </div>
+          <input type="hidden" id="mary-history-score-value">
+          <div class="score-preview" id="mary-history-score-preview">
+            الدرجة المحددة: <span>-</span>
+          </div>
+          <button class="btn-submit-action" onclick="saveHistoryScore()" style="margin-top: 1.5rem; width: 100%; justify-content: center;">
+            📜 رصد تاريخ الكنيسة وحفظ في الشيت
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== واجهة أبطال إيمان ==================== -->
+  <main class="page mary-theme mary-heroes-theme" id="mary-heroes-page">
+    <div class="dashboard-wrapper">
+      <div class="dash-header">
+        <div class="dash-title">
+          <h2>أبطال إيمان</h2>
+          <span class="dash-badge mary-badge">رصد درجات أبطال إيمان</span>
+        </div>
+        <button class="back-home-btn" onclick="logout()">خروج ↩</button>
+      </div>
+
+      <div class="guide-box">
+        <h4>💡 إرشادات تقييم أبطال إيمان:</h4>
+        <p>ابحث عن الطالب وحدد درجة أبطال إيمان المناسبة له اليوم (4، 6، 8، 10) لتسجيلها في شيت جوجل.</p>
+      </div>
+
+      <div class="student-selection-panel">
+        <div style="background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 1rem;">
+          <div class="input-group">
+            <label>تاريخ التقييم</label>
+            <input type="date" class="input-field" id="mary-heroes-date">
+          </div>
+          <div class="input-group">
+            <label>اختر الفريق</label>
+            <select class="input-field" id="mary-heroes-team-select" onchange="resetMaterialInterface('mary-heroes')">
+              <option value="all">كل الفرق</option>
+              <option value="الفريق الأول">الفريق الأول</option>
+              <option value="الفريق الثاني">الفريق الثاني</option>
+              <option value="غير محدد">غير محدد</option>
+            </select>
+          </div>
+          <div class="input-group" id="mary-heroes-search-group">
+            <label>اختر اسم الطالب</label>
+            <div class="search-container">
+              <input type="text" class="input-field" id="mary-heroes-student-search" placeholder="اضغط لاختيار الاسم أو اكتب للبحث..." oninput="searchStudentForMaryHeroes(this.value)" onfocus="searchStudentForMaryHeroes(this.value)" onclick="searchStudentForMaryHeroes(this.value)">
+              <input type="hidden" id="mary-heroes-student-id">
+              <div class="search-results" id="mary-heroes-search-results"></div>
+            </div>
+          </div>
+          <div class="input-group-checkbox" style="display: flex; align-items: center; gap: 0.5rem; margin-top: -0.5rem;">
+            <input type="checkbox" id="mary-heroes-name-not-found" onchange="toggleManualName('mary-heroes')" style="width: 16px; height: 16px; cursor: pointer;">
+            <label for="mary-heroes-name-not-found" style="cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">الاسم غير موجود بالقائمة؟</label>
+          </div>
+          <div class="input-group" id="mary-heroes-manual-name-group" style="display: none;">
+            <label>اكتب اسم الطالب الجديد</label>
+            <input type="text" class="input-field" id="mary-heroes-manual-name" placeholder="اكتب الاسم رباعي...">
+          </div>
+        </div>
+
+        <div class="score-selector">
+          <label style="font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem;">حدد درجة أبطال إيمان</label>
+          <div class="score-buttons" style="grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 0.5rem; width: 100%; max-width: 100%;">
+            <button class="score-btn" onclick="selectScore('mary-heroes', 0)">0</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 1)">1</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 2)">2</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 3)">3</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 4)">4</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 5)">5</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 6)">6</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 7)">7</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 8)">8</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 9)">9</button>
+            <button class="score-btn" onclick="selectScore('mary-heroes', 10)">10</button>
+          </div>
+          <input type="hidden" id="mary-heroes-score-value">
+          <div class="score-preview" id="mary-heroes-score-preview">
+            الدرجة المحددة: <span>-</span>
+          </div>
+          <button class="btn-submit-action" onclick="saveHeroesScore()" style="margin-top: 1.5rem; width: 100%; justify-content: center;">
+            🛡️ رصد أبطال إيمان وحفظ في الشيت
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== واجهة سالي (الكتاب المقدس) ==================== -->
+  <main class="page sally-theme" id="sally-page">
+    <div class="dashboard-wrapper">
+      <div class="dash-header">
+        <div class="dash-title">
+          <h2>الكتاب المقدس</h2>
+          <span class="dash-badge sally-badge">رصد درجات الكتاب المقدس</span>
+        </div>
+        <button class="back-home-btn" onclick="logout()">خروج ↩</button>
+      </div>
+
+      <div class="guide-box">
+        <h4>💡 إرشادات تقييم الكتاب المقدس:</h4>
+        <p>ابحث عن اسم الطالب وحدد درجة تقييمه في دراسة وحفظ الكتاب المقدس اليوم (4، 6، 8، 10).</p>
+      </div>
+
+      <div class="student-selection-panel">
+        <div style="background: rgba(15, 23, 42, 0.2); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 1rem;">
+          <div class="input-group">
+            <label>تاريخ التقييم</label>
+            <input type="date" class="input-field" id="sally-date">
+          </div>
+          <div class="input-group">
+            <label>اختر الفريق</label>
+            <select class="input-field" id="sally-team-select" onchange="resetMaterialInterface('sally')">
+              <option value="all">كل الفرق</option>
+              <option value="الفريق الأول">الفريق الأول</option>
+              <option value="الفريق الثاني">الفريق الثاني</option>
+              <option value="غير محدد">غير محدد</option>
+            </select>
+          </div>
+          <div class="input-group" id="sally-search-group">
+            <label>اختر اسم الطالب</label>
+            <div class="search-container">
+              <input type="text" class="input-field" id="sally-student-search" placeholder="اضغط لاختيار الاسم أو اكتب للبحث..." oninput="searchStudentForSally(this.value)" onfocus="searchStudentForSally(this.value)" onclick="searchStudentForSally(this.value)">
+              <input type="hidden" id="sally-student-id">
+              <div class="search-results" id="sally-search-results"></div>
+            </div>
+          </div>
+          <div class="input-group-checkbox" style="display: flex; align-items: center; gap: 0.5rem; margin-top: -0.5rem;">
+            <input type="checkbox" id="sally-name-not-found" onchange="toggleManualName('sally')" style="width: 16px; height: 16px; cursor: pointer;">
+            <label for="sally-name-not-found" style="cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">الاسم غير موجود بالقائمة؟</label>
+          </div>
+          <div class="input-group" id="sally-manual-name-group" style="display: none;">
+            <label>اكتب اسم الطالب الجديد</label>
+            <input type="text" class="input-field" id="sally-manual-name" placeholder="اكتب الاسم رباعي...">
+          </div>
+        </div>
+
+        <div class="score-selector">
+          <label style="font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem;">حدد درجة الكتاب المقدس للطالب</label>
+          <div class="score-buttons" style="grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 0.5rem; width: 100%; max-width: 100%;">
+            <button class="score-btn" onclick="selectScore('sally', 0)">0</button>
+            <button class="score-btn" onclick="selectScore('sally', 1)">1</button>
+            <button class="score-btn" onclick="selectScore('sally', 2)">2</button>
+            <button class="score-btn" onclick="selectScore('sally', 3)">3</button>
+            <button class="score-btn" onclick="selectScore('sally', 4)">4</button>
+            <button class="score-btn" onclick="selectScore('sally', 5)">5</button>
+            <button class="score-btn" onclick="selectScore('sally', 6)">6</button>
+            <button class="score-btn" onclick="selectScore('sally', 7)">7</button>
+            <button class="score-btn" onclick="selectScore('sally', 8)">8</button>
+            <button class="score-btn" onclick="selectScore('sally', 9)">9</button>
+            <button class="score-btn" onclick="selectScore('sally', 10)">10</button>
+          </div>
+          <input type="hidden" id="sally-score-value">
+          <div class="score-preview" id="sally-score-preview">
+            الدرجة المحددة: <span>-</span>
+          </div>
+          <button class="btn-submit-action" onclick="saveBibleScore()" style="margin-top: 1.5rem; width: 100%; justify-content: center;">
+            📖 رصد الكتاب المقدس وحفظ في الشيت
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== النوافذ المنبثقة (Modals) ==================== -->
+
+  <!-- نافذة كلمة المرور -->
+  <div class="modal-overlay" id="password-modal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('password-modal')">×</button>
+      <h3 id="password-modal-title">تسجيل الدخول للبوابة</h3>
+      <p id="password-modal-desc">أدخل كلمة المرور المخصصة لهذه البوابة للدخول</p>
+      
+      <div class="input-group">
+        <label>كلمة المرور</label>
+        <input type="password" class="input-field" id="portal-password-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') verifyPortalPassword()">
+      </div>
+      <input type="hidden" id="target-portal-id">
+      
+      <button class="submit-btn" onclick="verifyPortalPassword()">دخول البوابة 🔓</button>
+    </div>
+  </div>
+
+  <!-- نافذة إضافة وتعديل طالب -->
+  <div class="modal-overlay" id="student-modal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('student-modal')">×</button>
+      <h3 id="student-modal-title">إضافة طالب جديد</h3>
+      <p>أدخل بيانات الطالب لتسجيله في قائمة مدرسة المحبة</p>
+      
+      <input type="hidden" id="edit-student-id">
+      
+      <div class="input-group">
+        <label>اسم الطالب رباعي</label>
+        <input type="text" class="input-field" id="student-name-input" placeholder="مثال: جرجس فايز حبيب غالي">
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label>الفريق</label>
+          <select class="input-field" id="student-team-select">
+            <option value="الفريق الأول">الفريق الأول</option>
+            <option value="الفريق الثاني">الفريق الثاني</option>
+            <option value="غير محدد">غير محدد</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>الدور</label>
+          <select class="input-field" id="student-role-select">
+            <option value="عضو">عضو للفريق</option>
+            <option value="قائد تيم">قائد للفريق 👑</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="submit-btn" onclick="saveStudent()" style="background-color: var(--primary-fawzi); color: var(--text-dark);">حفظ الطالب في شيت الطلاب</button>
+    </div>
+  </div>
+
+  <!-- نافذة إعدادات جوجل شيت -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-box" style="max-width: 550px;">
+      <button class="modal-close" onclick="closeModal('settings-modal')">×</button>
+      <h3>إعدادات ربط Google Sheets</h3>
+      <p>قم بالربط المباشر لحفظ البيانات والمجاميع تلقائياً في الشيت الخاص بك</p>
+      
+      <div class="guide-box" style="margin-bottom: 1rem;">
+        <h4>📝 خطوات الحصول على رابط الربط:</h4>
+        <ol style="margin-right: 1.2rem; display: flex; flex-direction: column; gap: 0.25rem;">
+          <li>افتح ملف Google Spreadsheet الخاص بك.</li>
+          <li>اذهب إلى <b>Extensions -> Apps Script</b>.</li>
+          <li>امسح الكود القديم والصق كود ملف <code>code.gs</code> المحدث.</li>
+          <li>اضغط <b>Deploy -> New Deployment</b>.</li>
+          <li>اختر النوع <b>Web App</b>، واجعل صلاحية الدخول <b>Anyone</b>.</li>
+          <li>اضغط Deploy وانسخ رابط الـ Web App الناتج والصقه بالأسفل.</li>
+        </ol>
+      </div>
+
+      <div class="input-group">
+        <label>رابط الـ Web App من Google Apps Script</label>
+        <input type="url" class="input-field" id="google-script-url" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+
+      <button class="submit-btn" onclick="saveSettings()" style="background-color: var(--accent-gold); color: var(--text-dark);">حفظ الإعدادات وتفعيل المزامنة</button>
+    </div>
+  </div>
+
+  <!-- نظام التنبيهات Toast -->
+  <div class="toast" id="toast-notification">
+    <span id="toast-icon">ℹ️</span>
+    <span id="toast-message">تمت العملية بنجاح!</span>
+  </div>
+
+  <!-- شاشة الانتظار لمنع تكرار النقرات المزدوجة أثناء التسجيل -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loader"></div>
+    <p id="loading-text">جاري حفظ ومزامنة البيانات مع جوجل شيت...</p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
